@@ -4,16 +4,16 @@ import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
 
 
 
-export function ClienteButton(props) {
+export function HomeButton(props) {
 
-    const {onPress} = props
+    const {onPress, text} = props
 
     return (
-        <TouchableOpacity style = {estiloButton.button} onPress = {onPress}>
+        <TouchableOpacity style = {styles.buttonHome} onPress = {onPress}>
 
-            <Text style = {estiloButton.texto}>
+            <Text style = {styles.texto}>
 
-                Cliente
+                {text}
 
             </Text>
 
@@ -40,14 +40,15 @@ export function AdministradorButton(props) {
     )
 }
 
-const estiloButton = StyleSheet.create({
+const styles = StyleSheet.create({
 
-    button:{
-      backgroundColor:'#000000',
+    buttonHome:{
+      backgroundColor:'#272727',
       paddingVertical:1,
-      width:'50%',
+      width:'60%',
       alignSelf:"center",
       margin:30,
+      borderRadius:30,
     
     },
     texto:{
@@ -59,3 +60,4 @@ const estiloButton = StyleSheet.create({
     
     }
 });
+
