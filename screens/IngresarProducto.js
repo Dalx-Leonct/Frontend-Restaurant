@@ -1,113 +1,242 @@
-import { Text, View, StyleSheet, TextInput, Image, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, TextInput, Image, ScrollView, Alert } from 'react-native'
 import React, { Component, useState, useContext, useEffect } from 'react'
-import { HomeButton } from '../components/buttons'
+import { HomeButton, buttonAgregar } from '../components/buttons'
 import { Picker } from '@react-native-picker/picker';
+import ContextRestaurant from '../components/ContextR';
+import { launchImageLibrary } from 'react-native-image-picker';
+import axios from 'axios';
 
 const IngresarProducto = () => {
 
-const [select, setSelect] = useState("")
+  //Variables para mostrar categoria
 
-const categoriaSeleccionada = category => {setSelect(category)}
+  const [select, setSelect] = useState("") //category id y foranea
 
-const [categorys, setCategorys] = useState([]);
+  const categoriaSeleccionada = category => { setSelect(category) }
 
-useEffect(() => {
-  obtenerCategorias();
-});
+  const { setConsultarApi, setConsultarApiProductos, categorys, productos } = useContext(ContextRestaurant);
 
-const obtenerCategorias = async () => {
-  try {
-      const url = `http://192.168.31.15:8000/api/getAllCategory`
-      const response = await fetch(url)
-      const result = await response.json()
-      setCategorys(result)
-  } catch (error) {
-      throw error
+  //Variables para ingresar el producto
+  const [products, setProducts] = useState([])
+  const [nombreProducto, setNombreProducto] = useState("")
+  const [descripcion, setDescripcion] = useState("")
+  const [price, setPrice] = useState("")
+  const [stock, setStock] = useState("")
+  const [codProduct, setCodProduct] = useState("")
+  //Image Picker
+  const [image, setImage] = useState("https://media.istockphoto.com/id/1051652656/es/vector/plato-vac%C3%ADo-con-cuchillo-y-tenedor-aislado-sobre-fondo-blanco-vista-desde-arriba.jpg?s=612x612&w=0&k=20&c=WJq867LBua-9t0172PH-H1VP2Tafo6ztoAGlNArF_Eg=")
+  const [response, setResponse] = useState('');
+
+  const randomCode = () =>{
+    const n = Math.random().toString(36).substring(2,10)
+    return n
   }
-}
 
-    return (
-      <ScrollView style={styles.contenedor}>
+  
+
+  const chooseImage = () => {
+
+
+    const options = {
+      title: 'Seleccione la Imagen',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    }
+
+    launchImageLibrary(options, response => {
+
+      if (response.didCancel) {
+        console.log('Accion cancelada')
+      } else {
+        const path = response.assets[0].uri
+        setImage(path)
+        setResponse(response)
+      }
+
+    })
+  }
+
+
+  const uploadImage = async () => {
+
+    const uri = Platform.OS === "android"
+      ? response.assets[0].uri
+      : image.replace("file://", "");
+
+    const formData = new FormData();
+
+    formData.append("image", {
+      uri,
+      name: response.assets[0].fileName,
+      type: response.assets[0].type,
+    });
+
+    try {
+      const { data } = await axios.post('http://192.168.245.215:8000/api/upload', formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (!data.isSuccess) {
+        alert("La imagen NO se pudo subir con exito");
+        return;
+      }
+     
+      return data;
+    } catch (err) {
+      console.log(err);
+      alert("Error al subir la imagen");
+    } finally {
+     
+    }
+  }
+
+
+  // Fetch para agregar categoria
+  
+
+  const addProduct = async () => {
+    const code = randomCode();
+    setCodProduct(code)
+    const data = await uploadImage();
+    const url = 'http://192.168.245.215:8000/api/products';
+    try {
+      await fetch(
+        url,
+        {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: nombreProducto,
+            description: descripcion,
+            price: price,
+            stock: stock,
+            codProduct: code,
+            image: data.url,
+            category_id: select
+          })
+        },
+      )
+        .then((res) => res.json())
+        .catch((error) => console.log(error))
+        .then((response) => respuesta(response));
+    } catch (e) {
+      console.log(e);
+    }
+    Alert.alert('Producto Agregado', 'Producto ingresado exitosamente')
+    setConsultarApiProductos(true);
+    setProducts([])
+  };
+
+
+
+  return (
+    <ScrollView style={styles.contenedor}>
       <View>
-        <Image style={styles.imagen} source={require('../img/camaleon.png')}/>
+        <Image style={styles.imagen} source={require('../img/camaleon.png')} />
         <Text style={styles.subtitle}>Ingresar Producto</Text>
         <Text style={styles.texto}> Nombre Del Producto</Text>
         <TextInput
           style={styles.input}
           placeholder="Ingresar Nombre del Producto"
-           />
+          onChangeText={(text) => setNombreProducto(text)}
+          value={nombreProducto}
+        />
         <Text style={styles.texto}> Descripcion</Text>
         <TextInput
           style={styles.input}
           placeholder="Ingresar Descripcion del Producto"
-           />
+          onChangeText={(text) => setDescripcion(text)}
+          value={descripcion}
+        />
 
         <Text style={styles.texto}> Categoria</Text>
-        <Picker selectedValue={select} onValueChange={category => categoriaSeleccionada(category)}>
-                    <Picker.Item label=" Seleccione una categoria" value="" />
-                    {categorys.map(category => (
-                        <Picker.Item key={category.id} label={category.name} value={category.id} />
-                    ))}
-                </Picker>
+        <View style={styles.stylePicker}>
+          <Picker selectedValue={select} onValueChange={category => categoriaSeleccionada(category)}>
+            <Picker.Item label=" Seleccione una categoria" value="" />
+            {categorys.map(category => (
+              <Picker.Item key={category.id} label={category.name} value={category.id} />
+            ))}
+          </Picker>
+        </View>
 
         <Text style={styles.texto}>Precio</Text>
         <TextInput
           style={styles.input}
           placeholder="Ingrese el valor del producto"
-           />
+          onChangeText={(text) => setPrice(text)}
+          value={price}
+        />
 
         <Text style={styles.texto}>Cantidad</Text>
-         <TextInput
+        <TextInput
           style={styles.input}
           placeholder="Ingrese la cantidad del producto"
-           />
- 
+          onChangeText={(text) => setStock(text)}
+          value={stock}
+        />
 
-        <HomeButton onPress = {() => navigation.navigate("Cliente")} text = 'Ingresar Producto'/>  
+        <Text style={styles.texto}>Ingresar imagen</Text>
+        <HomeButton onPress={() => chooseImage()} text='Ingresar Imagen' />
+        <Image style={{ width: 80, height:80}}  source={{uri:image}} />
+
+        <HomeButton onPress={() => addProduct()} text='Ingresar Producto' />
       </View>
-      </ScrollView>
-    )
-  }
+    </ScrollView>
+  )
+}
 
 
 const styles = StyleSheet.create({
 
-  contenedor:{
-    backgroundColor:'#FFFFFF',
-    flex:1
+  contenedor: {
+    backgroundColor: '#FFFFFF',
+    flex: 1,
   },
-  subtitle:{
-    textAlign:'center',
-    fontSize:20,
-    color:'#000000',
-    textTransform:'uppercase',
-    paddingVertical:22
-  
+  subtitle: {
+    textAlign: 'center',
+    fontSize: 20,
+    color: '#000000',
+    textTransform: 'uppercase',
+    paddingVertical: 22
   },
-  imagen:{
-    height:100,
-    width:100,
+  imagen: {
+    height: 100,
+    width: 100,
     left: 145,
     marginTop: 30,
-    marginBottom: 30
+    marginBottom: 30,
   },
-  input:{
+  input: {
     backgroundColor: "#EEEEEE",
     borderWidth: 2,
     borderColor: 'black',
     padding: 10,
     fontSize: 20,
     width: 370,
-    left:20,
-    borderRadius :10,
+    left: 20,
+    borderRadius: 10,
   },
-  texto:{
-    fontSize:16,
-    color:'#000000',
-    textTransform:'uppercase',
-    paddingVertical:10,
-    left:20,
+  texto: {
+    fontSize: 16,
+    color: '#000000',
+    textTransform: 'uppercase',
+    paddingVertical: 10,
+    left: 20,
   },
+  stylePicker: {
+    backgroundColor: "#EEEEEE",
+    borderWidth: 2,
+    borderColor: 'black',
+    borderRadius: 10,
+    height: 50,
+    width: 370,
+    left: 20
+  }
 });
 
 export default IngresarProducto

@@ -1,29 +1,43 @@
-import { Text, View, Image, StyleSheet, TextInput } from 'react-native'
+import { Text, View, Image, StyleSheet, TextInput, Alert } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 import { HomeButton } from '../components/buttons'
-
+import ContextRestaurant from '../components/ContextR'
 //useffect gets
 //state 
 
-
-
 const AgregarCategoria = () => {
 
-
+  const { setConsultarApi, categorys } = useContext(ContextRestaurant);
   const [nombreCategoria, setNombreCategoria] = useState("")
 
-
+  // Fetch para agregar categoria
   const addCat = async () => {
-
+    const name = nombreCategoria
+    const url = 'http://192.168.245.215:8000/api/categories';
+    const categoria = {name}
     try {
-      const url = `http://192.168.31.15:8000/api/createCategory/${nombreCategoria}`
-      const response = await fetch(url)
-      const result = await response.json()
-    } catch (error) {
-      throw error
+      await fetch(
+        url,
+        {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({name})
+        },
+      )
+        .then((res) => res.json())
+        .catch((error) => console.log(error))
+        .then((response) => respuesta(response));
+    } catch (e) {
+      console.log(e);
     }
+    setConsultarApi(true);
     setNombreCategoria("")
-  }
+    Alert.alert('Categoria agregada','Categoria agragada exitosamente')
+  };
 
   return (
     <View style={styles.contenedor}>
@@ -69,10 +83,9 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 20,
     width: 370,
-    left: 20,
+    left: 10,
     borderRadius: 10,
   },
-
 });
 
 export default AgregarCategoria
