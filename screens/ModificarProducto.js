@@ -3,6 +3,8 @@ import React, { Component, useState, useContext } from 'react'
 import { HomeButton } from '../components/buttons'
 import ContextRestaurant from '../components/ContextR'
 import { Picker } from '@react-native-picker/picker';
+import { launchImageLibrary } from 'react-native-image-picker'
+import axios from 'axios';
 
 const ModificarProducto = () => {
   // Use context
@@ -11,12 +13,12 @@ const ModificarProducto = () => {
   //Use state picker productos
   const [select2, setSelect2] = useState("")
 
-  
+
 
   const productosSeleccionado = products => {
-    const productoBuscar  = productos.find(producto => producto.id === products);
-    if(products !=""){
-      const {id, name, description, price, stock, codProduct, image, category_id} = productoBuscar;
+    const productoBuscar = productos.find(producto => producto.id === products);
+    if (products != "") {
+      const { id, name, description, price, stock, codProduct, image, category_id } = productoBuscar;
       setSelect2(products)
       setNombreProducto(name)
       setDescripcion(description)
@@ -29,7 +31,7 @@ const ModificarProducto = () => {
     setSelect2(products)
   }
 
-  
+
 
   //Use state picker categoria
   const [select, setSelect] = useState("")
@@ -41,15 +43,15 @@ const ModificarProducto = () => {
   const [price, setPrice] = useState("")
   const [stock, setStock] = useState("")
   const [codProduct, setCodProduct] = useState("")
- //Image Picker
- const [image, setImage] = useState("https://media.istockphoto.com/id/1051652656/es/vector/plato-vac%C3%ADo-con-cuchillo-y-tenedor-aislado-sobre-fondo-blanco-vista-desde-arriba.jpg?s=612x612&w=0&k=20&c=WJq867LBua-9t0172PH-H1VP2Tafo6ztoAGlNArF_Eg=")
- const [response, setResponse] = useState('');
+  //Image Picker
+  const [image, setImage] = useState("https://media.istockphoto.com/id/1051652656/es/vector/plato-vac%C3%ADo-con-cuchillo-y-tenedor-aislado-sobre-fondo-blanco-vista-desde-arriba.jpg?s=612x612&w=0&k=20&c=WJq867LBua-9t0172PH-H1VP2Tafo6ztoAGlNArF_Eg=")
+  const [response, setResponse] = useState('');
 
 
 
   //Fetch para eliminar productos
   const delProd = async () => {
-    const url = `http://192.168.245.215:8000/api/products/${select2}`;
+    const url = `http://192.168.31.244:8000/api/products/${select2}`;
     try {
       await fetch(
         url,
@@ -68,7 +70,19 @@ const ModificarProducto = () => {
 
   //Fetch para editar productos
   const edProd = async () => {
-    const url = `http://192.168.245.215:8000/api/products/${select2}`;
+    if(image === "https://media.istockphoto.com/id/1051652656/es/vector/plato-vac%C3%ADo-con-cuchillo-y-tenedor-aislado-sobre-fondo-blanco-vista-desde-arriba.jpg?s=612x612&w=0&k=20&c=WJq867LBua-9t0172PH-H1VP2Tafo6ztoAGlNArF_Eg="){
+      Alert.alert("Error", "Ingrese una imagen ")
+      return
+    }
+    let urlImagen;
+    const containsFile = image.includes('file');
+    if(containsFile){
+      const newImage = await uploadImage();
+      urlImagen = newImage.url
+    }else{
+      urlImagen = image;
+    }
+    const url = `http://192.168.31.244:8000/api/products/${select2}`;
     try {
       await fetch(
         url,
@@ -85,7 +99,7 @@ const ModificarProducto = () => {
             price: price,
             stock: stock,
             codProduct: codProduct,
-            image: image,
+            image: urlImagen,
             category_id: select
           })
         },
@@ -98,6 +112,22 @@ const ModificarProducto = () => {
     }
   };
 
+    //Validacion eliminar producto
+    const estadoDel = (response) => {
+      console.log(response)
+      if (response.status === 1) {
+        Alert.alert('Producto Eliminado', 'Producto eliminado exitosamente')
+        setConsultarApiProductos(true);
+        setNombreProducto("")
+        setDescripcion("")
+        setPrice("")
+        setStock("")
+        setImage("https://media.istockphoto.com/id/1051652656/es/vector/plato-vac%C3%ADo-con-cuchillo-y-tenedor-aislado-sobre-fondo-blanco-vista-desde-arriba.jpg?s=612x612&w=0&k=20&c=WJq867LBua-9t0172PH-H1VP2Tafo6ztoAGlNArF_Eg=")
+        return
+      }
+      Alert.alert('Error', 'Producto no pudo ser eliminado')
+    }
+
   //Validacion modificar producto
   const estadoMod = (response) => {
     if (response.status === 1) {
@@ -107,27 +137,71 @@ const ModificarProducto = () => {
       setDescripcion("")
       setPrice("")
       setStock("")
-      setImage("")
+      setCodProduct("")
+      setImage("https://media.istockphoto.com/id/1051652656/es/vector/plato-vac%C3%ADo-con-cuchillo-y-tenedor-aislado-sobre-fondo-blanco-vista-desde-arriba.jpg?s=612x612&w=0&k=20&c=WJq867LBua-9t0172PH-H1VP2Tafo6ztoAGlNArF_Eg=")
       return
     }
     Alert.alert('Error', 'Producto no pudo ser modificado')
   }
 
-  //Validacion eliminar producto
-  const estadoDel = (response) => {
-    if (response.status === 1) {
-      Alert.alert('Producto Eliminado', 'Producto eliminado exitosamente')
-      setConsultarApiProductos(true);
-      setNombreProducto("")
-      setDescripcion("")
-      setPrice("")
-      setStock("")
-      setImage("")
-      return
+  //Abrir la galeria
+  const chooseImage = () => {
+
+    const options = {
+      title: 'Seleccione la Imagen',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
     }
-    Alert.alert('Error', 'Producto no pudo ser eliminado')
+
+    //Seleccionar imagen de la galeria
+    launchImageLibrary(options, response => {
+
+      if (response.didCancel) {
+        console.log('Accion cancelada')
+      } else {
+        const path = response.assets[0].uri
+        setImage(path)
+        setResponse(response)
+      }
+
+    })
   }
 
+  //Subir imagen
+  const uploadImage = async () => {
+
+    const uri = Platform.OS === "android"
+      ? response.assets[0].uri
+      : image.replace("file://", "");
+
+    const formData = new FormData();
+
+    formData.append("image", {
+      uri,
+      name: response.assets[0].fileName,
+      type: response.assets[0].type,
+    });
+
+    try {
+      const { data } = await axios.post('http://192.168.31.244:8000/api/upload', formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (!data.isSuccess) {
+        alert("La imagen NO se pudo subir con exito");
+        return;
+      }
+     
+      return data;
+    } catch (err) {
+      console.log(err);
+      alert("Error al subir la imagen");
+    } finally {
+     
+    }
+    
+  }
   return (
     <ScrollView style={styles.contenedor}>
       <View>
@@ -188,7 +262,7 @@ const ModificarProducto = () => {
 
         <Text style={styles.texto}>Ingresar imagen</Text>
         <HomeButton onPress={() => chooseImage()} text='Ingresar Imagen' />
-        <Image style={{ width: 80, height:80}}  source={{uri:image}} />
+        <Image style={{ width: 80, height: 80, marginHorizontal: 160 }} source={{ uri: image }} />
 
         <HomeButton onPress={() => edProd()} text='Modificar Producto' />
         <HomeButton onPress={() => delProd()} text='Eliminar Producto' />
@@ -246,6 +320,7 @@ const styles = StyleSheet.create({
     left: 20
   }
 });
+
 
 
 export default ModificarProducto

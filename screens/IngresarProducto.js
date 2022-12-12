@@ -33,9 +33,8 @@ const IngresarProducto = () => {
   }
 
   
-
+  //Subir imagen al backend
   const chooseImage = () => {
-
 
     const options = {
       title: 'Seleccione la Imagen',
@@ -45,6 +44,7 @@ const IngresarProducto = () => {
       }
     }
 
+    //Seleccionar imagen de la galeria
     launchImageLibrary(options, response => {
 
       if (response.didCancel) {
@@ -58,7 +58,7 @@ const IngresarProducto = () => {
     })
   }
 
-
+  //Subir imagen
   const uploadImage = async () => {
 
     const uri = Platform.OS === "android"
@@ -74,7 +74,7 @@ const IngresarProducto = () => {
     });
 
     try {
-      const { data } = await axios.post('http://192.168.245.215:8000/api/upload', formData, {
+      const { data } = await axios.post('http://192.168.31.244:8000/api/upload', formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (!data.isSuccess) {
@@ -91,15 +91,15 @@ const IngresarProducto = () => {
     }
   }
 
-
-  // Fetch para agregar categoria
-  
-
+  // Fetch para agregar producto
   const addProduct = async () => {
+    if(image === "https://media.istockphoto.com/id/1051652656/es/vector/plato-vac%C3%ADo-con-cuchillo-y-tenedor-aislado-sobre-fondo-blanco-vista-desde-arriba.jpg?s=612x612&w=0&k=20&c=WJq867LBua-9t0172PH-H1VP2Tafo6ztoAGlNArF_Eg="){
+      Alert.alert("Error", "Ingrese una imagen ")
+      return
+    }
     const code = randomCode();
-    setCodProduct(code)
     const data = await uploadImage();
-    const url = 'http://192.168.245.215:8000/api/products';
+    const url = 'http://192.168.31.244:8000/api/products';
     try {
       await fetch(
         url,
@@ -123,16 +123,28 @@ const IngresarProducto = () => {
       )
         .then((res) => res.json())
         .catch((error) => console.log(error))
-        .then((response) => respuesta(response));
+        .then((response) => estadoIngresar(response));
     } catch (e) {
       console.log(e);
     }
-    Alert.alert('Producto Agregado', 'Producto ingresado exitosamente')
-    setConsultarApiProductos(true);
-    setProducts([])
   };
 
 
+    //Validacion Ingresar producto
+    const estadoIngresar = (response) => {
+      console.log(response)
+      if (response.status === 1) {
+        Alert.alert('Producto Ingresado', 'Producto agregado exitosamente')
+        setConsultarApiProductos(true);
+        setNombreProducto("")
+        setDescripcion("")
+        setPrice("")
+        setStock("")
+        return
+      }
+      Alert.alert('Error', 'Producto no pudo ser agregado')
+    }
+  
 
   return (
     <ScrollView style={styles.contenedor}>
@@ -182,7 +194,7 @@ const IngresarProducto = () => {
 
         <Text style={styles.texto}>Ingresar imagen</Text>
         <HomeButton onPress={() => chooseImage()} text='Ingresar Imagen' />
-        <Image style={{ width: 80, height:80}}  source={{uri:image}} />
+        <Image style={{ width: 80, height:80, marginHorizontal:160}}  source={{uri:image}} />
 
         <HomeButton onPress={() => addProduct()} text='Ingresar Producto' />
       </View>

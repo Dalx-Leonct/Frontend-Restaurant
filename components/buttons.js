@@ -2,8 +2,6 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
 
-
-
 export function HomeButton(props) {
 
     const {onPress, text} = props
@@ -58,6 +56,77 @@ export function CatalogoButton(props) {
     )
 }
 
+export function CancelarPedido(props) {
+
+    const {onPress, text} = props
+
+    return (
+        <TouchableOpacity style = {styles.botonCancelar} onPress = {onPress}>
+
+            <Text style = {styles.textoMenu}>
+
+                {text}
+
+            </Text>
+
+        </TouchableOpacity>
+
+    )
+}
+
+export function AgregarPedido(props) {
+
+    const {onPress, text} = props
+
+    return (
+        <TouchableOpacity style = {styles.botonAgregar} onPress = {onPress}>
+
+            <Text style = {styles.textoMenu}>
+
+                {text}
+
+            </Text>
+
+        </TouchableOpacity>
+
+    )
+}
+
+export function QuitarCarrito(props) {
+
+    const {onPress, text} = props
+
+    return (
+        <TouchableOpacity style = {styles.quitarPedido} onPress = {onPress}>
+
+            <Text style = {styles.textoQuitarPedido}>
+
+                {text}
+
+            </Text>
+
+        </TouchableOpacity>
+
+    )
+}
+
+export function AgregarOrden(props) {
+
+    const {onPress, text} = props
+
+    return (
+        <TouchableOpacity style = {styles.AgregarOrden} onPress = {onPress}>
+
+            <Text style = {styles.textoQuitarPedido}>
+
+                {text}
+
+            </Text>
+
+        </TouchableOpacity>
+
+    )
+}
 
 const styles = StyleSheet.create({
 
@@ -78,7 +147,7 @@ const styles = StyleSheet.create({
     
     },
     buttonAgregar:{
-        backgroundColor:'#64DD17',
+        backgroundColor:'#77DD77',
         paddingVertical:7,
         width:100,
         height:30,
@@ -86,31 +155,86 @@ const styles = StyleSheet.create({
         borderRadius:10,
         textAlign:'center',
         margin:10,
-        right: 5
+        right: 5,
+        marginTop:50
       },
       textoAgregar:{
         textAlign:'center',
         fontSize:10,
         color:'#000000',
         textTransform:'uppercase',
-        
       },
       botonCatalogo:{
-        backgroundColor: 'lightgrey',
-        width:22,
-        height:22,
+        backgroundColor: 'black',
+        width:100,
+        height:50,
         borderWidth:2,
         borderColor: '000000',
-        borderRadius:10,
+        borderRadius: 8,
         textAlign:"center",
-        margin:5,
-        left:20
+        margin:20,
       },
       textoBtCtg:{
         textAlign:'center',
-        fontSize:12,
+        fontSize:30,
+        color:'#FFFFFF',
+        textTransform:'uppercase',
+      },
+      botonAgregar:{
+        backgroundColor: '#bdecb6',
+        width:200,
+        height:50,
+        borderWidth:2,
+        borderColor: '#000000',
+        borderRadius: 8,
+        textAlign:"center",
+        margin:20,
+      },
+      botonCancelar:{
+        backgroundColor: '#ff6961',
+        width:200,
+        height:50,
+        borderWidth:2,
+        borderColor: '#000000',
+        borderRadius: 8,
+        textAlign:"center",
+        margin:20,
+      },
+      textoMenu:{
+        textAlign:'center',
+        fontSize:30,
         color:'#000000',
         textTransform:'uppercase',
+        fontStyle:'italic'
+      },
+      quitarPedido:{
+        backgroundColor: '#ff6961',
+        width:100,
+        height:25,
+        borderWidth:2,
+        borderColor: '#000000',
+        borderRadius: 8,
+        textAlign:"center",
+        marginTop:50,
+        marginLeft:10
+      },
+      textoQuitarPedido:{
+        textAlign:'center',
+        fontSize:15,
+        color:'#000000',
+        textTransform:'uppercase',
+        fontStyle:'italic'
+      },
+      AgregarOrden:{
+        backgroundColor: '#bdecb6',
+        width:100,
+        height:25,
+        borderWidth:2,
+        borderColor: '#000000',
+        borderRadius: 8,
+        textAlign:"center",
+        marginLeft: 100,
+        marginTop:25
       },
 });
 

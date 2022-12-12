@@ -20,7 +20,7 @@ const EliminarCategoria = () => {
   //Fetch para eliminar categorias
   const delCat = async () => {
     const name = nombreCategoria
-    const url = `http://192.168.245.215:8000/api/categories/${select}`;
+    const url = `http://192.168.31.244:8000/api/categories/${select}`;
     const categoria = { name }
     try {
       await fetch(
@@ -43,7 +43,7 @@ const EliminarCategoria = () => {
   //Fetch para editar categoria
   const edCat = async () => {
     const name = nombreCategoria
-    const url = `http://192.168.245.215:8000/api/categories/${select}`;
+    const url = `http://192.168.31.244:8000/api/categories/${select}`;
     const categoria = {name}
     try {
       await fetch(

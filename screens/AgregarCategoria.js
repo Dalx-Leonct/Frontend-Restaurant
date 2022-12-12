@@ -2,6 +2,7 @@ import { Text, View, Image, StyleSheet, TextInput, Alert } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 import { HomeButton } from '../components/buttons'
 import ContextRestaurant from '../components/ContextR'
+
 //useffect gets
 //state 
 
@@ -13,7 +14,7 @@ const AgregarCategoria = () => {
   // Fetch para agregar categoria
   const addCat = async () => {
     const name = nombreCategoria
-    const url = 'http://192.168.245.215:8000/api/categories';
+    const url = 'http://192.168.31.244:8000/api/categories';
     const categoria = {name}
     try {
       await fetch(
@@ -30,14 +31,22 @@ const AgregarCategoria = () => {
       )
         .then((res) => res.json())
         .catch((error) => console.log(error))
-        .then((response) => respuesta(response));
+        .then((response) => estadoIngresar(response));
     } catch (e) {
       console.log(e);
     }
-    setConsultarApi(true);
-    setNombreCategoria("")
-    Alert.alert('Categoria agregada','Categoria agragada exitosamente')
   };
+
+  const estadoIngresar = (response) => {
+    console.log(response)
+    if (response.status === 1) {
+      Alert.alert('Categoria agregada','Categoria agragada exitosamente')
+      setConsultarApi(true);
+      setNombreCategoria("")
+      return
+    }
+    Alert.alert('Error', 'Categoria no pudo ser agregada')
+  }
 
   return (
     <View style={styles.contenedor}>
