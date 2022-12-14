@@ -5,9 +5,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ContextRestaurant from '../components/ContextR';
 import CountDown from 'react-native-countdown-component';
 
+//CLIENTE
+
 //Detalle de orden y cronometro
 const MyOrderScreen = ({ navigation }) => {
-  const { setConsultarApi, setConsultarApiProductos, categorys, productos, tables, productoCantidad, setProductoCantidad, productosMesa, setProductosMesa, orden, setOrden, selectMesa, setSelectMesa } = useContext(ContextRestaurant);
+  const {  orden, setOrden, selectMesa, setSelectMesa, consultarApiOrders, setConsultarApiOrders, obtenerOrdenesBase, setObtenerOrdenesBase  } = useContext(ContextRestaurant);
+
+  //const { id, codeOrder, total, orderStatus, tables_id, minutes, seconds } = obtenerOrdenesBase
+  
 
   return (
     <SafeAreaView style={styles.container}>

@@ -3,8 +3,9 @@ import React, { useState, useEffect, useContext } from 'react'
 import { HomeButton } from '../components/buttons'
 import ContextRestaurant from '../components/ContextR'
 
-//useffect gets
-//state 
+//ADMINISTRADOR
+
+//AGREGAR UNA CATEGORIA
 
 const AgregarCategoria = () => {
 
@@ -36,6 +37,7 @@ const AgregarCategoria = () => {
       console.log(e);
     }
   };
+  //Validacion de agregar
 
   const estadoIngresar = (response) => {
     console.log(response)

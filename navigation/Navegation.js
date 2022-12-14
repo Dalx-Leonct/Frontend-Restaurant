@@ -12,11 +12,12 @@ import ShoppingCar from '../screens/ShoppingCar'
 import MyOrderScreen from "../screens/MyOrderScreen";
 import SelectTableScreen from "../screens/SelectTableScreen";
 import AgregarPedidos from '../screens/AgregarPedidos'
-
+//Navegacion de la aplicacion
 
 const Tab1 = createBottomTabNavigator();
 const AdStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+//Stack de las screens
 
 function StackHome() {
 
@@ -30,17 +31,19 @@ function StackHome() {
   );
 }
 
+//Bottom tab navigator del administrador
 function AdTab() {
   return (
     <Tab1.Navigator>
       <Tab1.Screen name="Ingresar Producto" component={IngresarProducto} options={{ tabBarIcon: () => renderIngresar(), headerShown: false }} />
       <Tab1.Screen name="Modificar Producto" component={ModificarProducto} options={{ tabBarIcon: () => renderMod(), headerShown: false }} />
       <Tab1.Screen name="Agregar Categoria" component={AgregarCategoria} options={{ tabBarIcon: () => renderAgregar(), headerShown: false }} />
-      <Tab1.Screen name="Editar Categoria" component={EliminarCategoria} options={{ tabBarIcon: () => renderEliminar(), headerShown: false }} />
+      <Tab1.Screen name="Modificar Categoria" component={EliminarCategoria} options={{ tabBarIcon: () => renderEliminar(), headerShown: false }} />
     </Tab1.Navigator>
   )
 }
 
+//Bottom tab navigator del cliente
 function ClienteTab() {
   return (
     <Tab.Navigator>
@@ -50,6 +53,7 @@ function ClienteTab() {
     </Tab.Navigator>
   )
 }
+
 export default function Navegation() {
   return (
     <NavigationContainer>
@@ -58,7 +62,7 @@ export default function Navegation() {
   )
 }
 
-
+//Render de imagenes para los iconos de las bottom nav bar
 function renderIngresar() {
   return (
     <Image

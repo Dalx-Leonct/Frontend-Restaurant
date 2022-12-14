@@ -6,6 +6,10 @@ import { Picker } from '@react-native-picker/picker';
 import { launchImageLibrary } from 'react-native-image-picker'
 import axios from 'axios';
 
+//ADMINISTRADOR
+
+//Modificar y eliminar productos
+
 const ModificarProducto = () => {
   // Use context
   const { setConsultarApiProductos, productos, categorys, setConsultarApi } = useContext(ContextRestaurant);

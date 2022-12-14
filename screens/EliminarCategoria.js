@@ -4,6 +4,10 @@ import { HomeButton } from '../components/buttons'
 import { Picker } from '@react-native-picker/picker';
 import ContextRestaurant from '../components/ContextR';
 
+//ADMINISTRADOR
+
+//ELIMINAR Y MODIFICAR CATEGORIA
+
 const EliminarCategoria = () => {
 
   const [select, setSelect] = useState("")

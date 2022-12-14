@@ -6,6 +6,8 @@ import { FlatList } from 'react-native';
 import ContextRestaurant from '../components/ContextR';
 import { QuitarCarrito, AgregarOrden } from '../components/buttons';
 
+//CLIENTE
+
 //Screen del carrito
 export default function ShoppingCar() {
 

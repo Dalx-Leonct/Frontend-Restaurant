@@ -8,6 +8,7 @@ import {
   import buttons, { HomeButton }  from '../components/buttons';
   import { useNavigation } from '@react-navigation/native';
 
+  //PANTALLA PRINCIPAL
 
 const Home = () => {
 

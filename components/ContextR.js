@@ -11,11 +11,13 @@ export function ContextProvider({ children }) {
     const [productosMesa, setProductosMesa] = useState([]);
     const [orden, setOrden] = useState({});
     const [selectMesa, setSelectMesa] = useState("");
+    const [obtenerOrdenesBase, setObtenerOrdenesBase] = useState([]);
 
 
     const [consultarApi, setConsultarApi] = useState(true); //Categoria
     const [consultarApiProductos, setConsultarApiProductos] = useState(true); //Productos
     const [consultarApiTables, setConsultarApiTables] = useState(true);  // Mesas
+    const [consultarApiOrders, setConsultarApiOrders] = useState(true); //Ordens
 
 // Use effect de categorias
     useEffect(() => {
@@ -73,8 +75,29 @@ export function ContextProvider({ children }) {
         }   
     },[consultarApiTables]);
 
+    // Intento de Use effect de Ordenes
+   /* 
+   useEffect(() => {
+        const obtenerOrdenes = async () => {
+            try {
+                const url = `http://192.168.31.244:8000/api/orders`
+                const response = await fetch(url)
+                const result = await response.json()
+                setObtenerOrdenesBase(result)
+            } catch (error) {
+                throw error
+            }
+            setConsultarApiOrders(false)
+        }
+        if(consultarApiOrders){
+            obtenerOrdenes()
+        }   
+    },[consultarApiOrders]);
+    */
+
+    //Se retorna el children del useContext
     return (
-        <ContextRestaurant.Provider value={{ setConsultarApi, setConsultarApiProductos, categorys, productos, setConsultarApiTables, tables, productoCantidad, setProductoCantidad, productosMesa, setProductosMesa, orden, setOrden, selectMesa, setSelectMesa }}>
+        <ContextRestaurant.Provider value={{ setConsultarApi, setConsultarApiProductos, categorys, productos, setConsultarApiTables, tables, productoCantidad, setProductoCantidad, productosMesa, setProductosMesa, orden, setOrden, selectMesa, setSelectMesa, consultarApiOrders, setConsultarApiOrders, obtenerOrdenesBase, setObtenerOrdenesBase }}>
             {children}
         </ContextRestaurant.Provider>
     )

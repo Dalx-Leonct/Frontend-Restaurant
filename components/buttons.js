@@ -1,8 +1,10 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
+
 
 export function HomeButton(props) {
+
+    //Creacion de los botones
 
     const {onPress, text} = props
 

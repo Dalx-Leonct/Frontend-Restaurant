@@ -2,16 +2,19 @@ import { Text, View, StyleSheet, FlatList, Button, Image, Modal, Alert } from 'r
 import { useEffect, useState, useContext } from 'react';
 import { CatalogoButton, AgregarPedido, CancelarPedido } from '../components/buttons';
 import ContextRestaurant from '../components/ContextR';
-import { NavigationHelpersContext } from '@react-navigation/native';
 
-//Screen de contador de pedidos
+
+//CLIENTE
+
+//Pantalla cuando esta seleccionando la cantidad de producto a llevar
+
 const AgregarPedidos = ({ navigation }) => {
 
     const { setConsultarApi, setConsultarApiProductos, categorys, productos, tables, productoCantidad, setProductoCantidad, productosMesa, setProductosMesa } = useContext(ContextRestaurant);
     const { name, stock, image, price, id } = productoCantidad;
     const [count, setCount] = useState(1);
     
-
+//CONTADOR
     const decrease = () => {
         if (count > 1) {
             setCount(count - 1);

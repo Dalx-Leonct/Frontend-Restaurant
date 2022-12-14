@@ -8,9 +8,9 @@ import { AgregarButton, CatalogoButton, AgregarPedido, CancelarPedido } from '..
 import { useNavigation } from '@react-navigation/native';
 
 
-//import { SelectCountry } from 'react-native-element-dropdown';
-//import { Colors } from 'react-native/Libraries/NewAppScreen';
+//CLIENTE
 
+//SELECCION DE MESAS Y CATALOGO 
 
 const SelectTableScreen = () => {
 

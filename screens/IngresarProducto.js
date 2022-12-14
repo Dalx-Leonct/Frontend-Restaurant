@@ -6,6 +6,10 @@ import ContextRestaurant from '../components/ContextR';
 import { launchImageLibrary } from 'react-native-image-picker';
 import axios from 'axios';
 
+//ADMINISTRADOR
+
+//INGRESAR PRODUCTOS NUEVOS
+
 const IngresarProducto = () => {
 
   //Variables para mostrar categoria
@@ -56,6 +60,7 @@ const IngresarProducto = () => {
       }
 
     })
+    
   }
 
   //Subir imagen
