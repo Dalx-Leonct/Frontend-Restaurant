@@ -16,8 +16,8 @@ Correr el proyecto:
 2. Abre la carpeta del proyecto.
 3. Abre una nueva terminal en visual.
 4. pon el siguiente comando:
--npm install
 
+-npm install
 
 -npx react-native run-android
 
