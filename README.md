@@ -14,7 +14,7 @@ Correr el proyecto:
 
 1. Abre visual studio code.
 2. Abre la carpeta del proyecto.
-3. Sustituir la ip: 192.168.31.244 en el buscador por su ip local
+3. En el buscador ingrese: 192.168.31.244 y reemplace las coincidencias por su ip local
 4. Abre una nueva terminal en visual.
 5. pon el siguiente comando:
 
